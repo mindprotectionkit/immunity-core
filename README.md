@@ -6,15 +6,18 @@ Ultra-Secure Cloud OS
 
 ### Minimalistic KVM Hypervisor with strong focus on simplicity.
 
-Immunity Core is a kernel only Linux Image with strong focus on security.
-It is used as a hypervisor for cloud services designed to secure virtualized environments.
+Immunity Core is a kernel-only Linux distribution designed for virtualization security.
+It serves as a ultra-secure hypervisor at the core of free private cloud deployment.
+Protecting the virtualization layer is critical for any *really* secure cloud.
+Common hypervisors are not very secure, agencies can (easily) enter the layer below most cloud servers.
 
-Immunity Core is a 10 MB kernel+hypervisor live-CD which does *nothing* else than running your KVM-instances.
-
-Please deploy it on secure hardware. [Coreboot](http://www.coreboot.org/) is mandatory.
+Immunity Core is here to change this. A 10 MB kernel+hypervisor live-CD which does *nothing* else than running your KVM-instances.
+Please deploy it on secure hardware. Using [Coreboot](http://www.coreboot.org/) and a secure network card is highly recommended.
 
 
 #Background
+
+(tbd)
 
 Hypervisors are the core blocks of any cloud architecture. 
 Protecting their integrity and preventing over-interested third parties from entering your servers is very important.
@@ -24,14 +27,19 @@ The Goal of this project is to create a very small, ultra secure, lightweight, r
 We want to protect cloud services from adversaries of any kind. Gouvernments should not be able to steal our data from clouds. Immunity Core is an important tool to fulfill this mission.
 
 
+#Security
 
-#Principles
+Immunity Core integrates the following seurity-features.
 
-+ Design to be small
-+ Very limited number of packages
-+ Read-Only Deployment
-+ Deployment-Stages
-+ Boot from Disk-Drive
++ No keyboard/mouse at runtime.
++ 
+
+#Project Principles
+
++ Simplicity
++ Security
++ As-small-as-possible
++ Deploy read only
 
 
 #Documentation
