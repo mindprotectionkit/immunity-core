@@ -51,8 +51,8 @@ tbc...
 
 
 #References
-http://en.wikipedia.org/wiki/TRESOR
-http://privatecore.com/use-cases/prism-proof-cloud-servers/
-http://www.links.org/?p=330
-http://krebsonsecurity.com/2013/01/backdoors-found-in-barracuda-networks-gear/
+1. [Tresor](http://en.wikipedia.org/wiki/TRESOR)
+2. [Privatecore](http://privatecore.com/use-cases/prism-proof-cloud-servers/)
+3. [Network](http://www.links.org/?p=330)
+4. [Backdoors](http://krebsonsecurity.com/2013/01/backdoors-found-in-barracuda-networks-gear/)
 
