@@ -12,7 +12,7 @@ Protecting the virtualization layer is critical for any *really* secure cloud (p
 Today's hypervisors are not very secure, agencies can (easily) enter the layer below most cloud servers. :(
 
 Immunity Core is here to change this. A 10 MB kernel+hypervisor live-CD which does *nothing* else than running your KVM-instances.
-Please deploy it on secure hardware. Using [Coreboot](http://www.coreboot.org/) and a secure network card is highly recommended.
+Please deploy it on secure hardware. Using an open firmware like [Coreboot](http://www.coreboot.org/) and a secure network card is highly recommended.
 
 
 #Background
@@ -24,15 +24,15 @@ Protecting their integrity and preventing over-interested third parties from ent
 Unfortunately there is no easy to use bare metal hypervisor with appropriate security built-in. 
 
 The Goal of this project is to create a very small, ultra secure, lightweight, read only KVM hypervisor.
-We want to protect cloud services from adversaries of any kind. Gouvernments should not be able to steal our data from clouds. Immunity Core is an important tool to fulfill this mission.
+We want to protect cloud services from adversaries of any kind. Governments should not be able to steal our data from clouds. Immunity Core is an important tool to fulfill this mission.
 
 
 #Security
 
-Immunity Core integrates the following seurity-features.
+Immunity Core integrates the following security-features.
 
 + No keyboard/mouse at runtime.
-+ 
++ Restricted SSH access.
 
 #Project Principles
 
@@ -44,10 +44,9 @@ Immunity Core integrates the following seurity-features.
 
 #Documentation
 
-1. Burn Immunity-Core .iso img
-2. Start ...
-tbc...
-
+1. Burn Immunity-Core-Demo.iso img
+2. Boot the ISO on x86_64 with Intel VT or AMD V
+3. Run "load_ubuntu" to start a demo guest image (Ubuntu 14.04 server running Apache)
 
 
 #References
