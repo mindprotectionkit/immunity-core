@@ -1,4 +1,4 @@
-![Logo](assets/logo_core.png "Immunity Core Logo")
+![Logo](assets/logo_core_small.png "Immunity Core Logo")
 
 Ultra-Secure Cloud OS
 =====================
