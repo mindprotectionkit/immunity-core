@@ -1,6 +1,6 @@
 ![Logo](assets/logo_core_small.png "Immunity Core Logo")
 
-Ultra-Secure Cloud OS
+The Ultra-Secure Cloud OS
 =====================
 
 ### Minimalistic KVM Hypervisor with strong focus on simplicity.
