@@ -7,16 +7,13 @@ The Ultra-Secure Cloud OS
 
 Immunity Core is a kernel-only Linux distribution designed for virtualization security.
 It serves as a ultra-secure hypervisor at the core of free private cloud deployments.
-Protecting the virtualization layer is critical for any *really* secure cloud (private of public).
-Today's hypervisors are not very secure, agencies can (easily) enter the layer below most cloud servers. :(
+Protecting the virtualization layer is critical for any really secure cloud (private of public).
 
 Immunity Core is here to change this. A 10 MB kernel+hypervisor live-CD which does *nothing* else than running your KVM-instances.
 Please deploy it on secure hardware. Using an open firmware like [Coreboot](http://www.coreboot.org/) and a secure network card is highly recommended.
 
 
 #Background
-
-(tbd)
 
 Hypervisors are the core blocks of any cloud architecture. 
 Protecting their integrity and preventing over-interested third parties from entering your servers is very important.
