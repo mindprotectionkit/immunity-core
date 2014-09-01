@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The Ultra-Secure Cloud OS &mdash; Immunity DOCS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+    <link rel="top" title="Immunity DOCS 1.0 documentation" href="#" />
+    <link rel="next" title="Tiny Core DOCS!" href="information.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="information.html" title="Tiny Core DOCS!"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">Immunity DOCS 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-ultra-secure-cloud-os">
+<h1>The Ultra-Secure Cloud OS<a class="headerlink" href="#the-ultra-secure-cloud-os" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="/img/logo_big.png"><img alt="image_email_small" src="_images/logo_big.png" /></a></p>
+<div class="section" id="minimalistic-kvm-hypervisor-with-strong-focus-on-simplicity">
+<h2>Minimalistic KVM Hypervisor with strong focus on simplicity.<a class="headerlink" href="#minimalistic-kvm-hypervisor-with-strong-focus-on-simplicity" title="Permalink to this headline">¶</a></h2>
+<p>Immunity Core is a kernel-only Linux distribution designed for virtualization security.
+It serves as a ultra-secure hypervisor at the core of free private cloud deployments.
+Protecting the virtualization layer is critical for any really secure cloud (private of public).</p>
+<p>Immunity Core is here to change this. A 10 MB kernel+hypervisor live-CD which does <em>nothing</em> else than running your KVM-instances.
+Please deploy it on secure hardware. Using an open firmware like - <a class="reference external" href="http://www.coreboot.org">Coreboot</a> and a secure network card is highly recommended.</p>
+</div>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>Hypervisors are the core blocks of any cloud architecture.
+Protecting their integrity and preventing over-interested third parties from entering your servers is very important.
+Unfortunately there is no easy to use bare metal hypervisor with appropriate security built-in.</p>
+<p>The Goal of this project is to create a very small, ultra secure, lightweight, read only KVM hypervisor.
+We want to protect cloud services from adversaries of any kind. Governments should not be able to steal our data from clouds. Immunity Core is an important tool to fulfill this mission.</p>
+</div>
+<div class="section" id="security">
+<h2>Security<a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h2>
+<p>Immunity Core integrates the following security-features.</p>
+<ul class="simple">
+<li>No keyboard/mouse at runtime.</li>
+<li>Restricted SSH access.</li>
+</ul>
+</div>
+<div class="section" id="project-principles">
+<h2>Project Principles<a class="headerlink" href="#project-principles" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Simplicity</li>
+<li>Security</li>
+<li>As-small-as-possible</li>
+<li>Deploy read only</li>
+</ul>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Burn Immunity-Core-Demo.iso img</li>
+<li>Boot the ISO on x86_64 with Intel VT or AMD V</li>
+<li>Run &#8220;load_ubuntu&#8221; to start a demo guest image (Ubuntu 14.04 server running Apache)</li>
+</ul>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://en.wikipedia.org/wiki/TRESOR">Tresor</a></li>
+<li><a class="reference external" href="http://privatecore.com/use-cases/prism-proof-cloud-servers/">Private_Core</a></li>
+<li><a class="reference external" href="http://www.links.org/?p=330">Network</a></li>
+<li><a class="reference external" href="http://krebsonsecurity.com/2013/01/backdoors-found-in-barracuda-networks-gear/">Backdoors</a></li>
+</ul>
+<div class="section" id="contents">
+<h3>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="information.html">Tiny Core DOCS!</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="information.html#what-is-in-stage01">What is in stage01?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information.html#what-is-in-stage02">What is in stage02?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information.html#what-is-in-stage02-extras">What is in stage02.extras?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information.html#building-everything">Building everything!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information.html#start-services">Start services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information.html#login-with-password">Login with password?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information.html#remove-login-without-password">Remove login without password?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information.html#i-want-to-add-more-services">I want to add more services!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information.html#do-you-plan-to-add-features">Do you plan to add features?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="information.html#are-there-bugs">Are there bugs?</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The Ultra-Secure Cloud OS</a><ul>
+<li><a class="reference internal" href="#minimalistic-kvm-hypervisor-with-strong-focus-on-simplicity">Minimalistic KVM Hypervisor with strong focus on simplicity.</a></li>
+<li><a class="reference internal" href="#background">Background</a></li>
+<li><a class="reference internal" href="#security">Security</a></li>
+<li><a class="reference internal" href="#project-principles">Project Principles</a></li>
+<li><a class="reference internal" href="#documentation">Documentation</a></li>
+<li><a class="reference internal" href="#references">References</a><ul>
+<li><a class="reference internal" href="#contents">Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="information.html"
+                        title="next chapter">Tiny Core DOCS!</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="information.html" title="Tiny Core DOCS!"
+             >next</a> |</li>
+        <li><a href="#">Immunity DOCS 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, MindProtectionKit.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

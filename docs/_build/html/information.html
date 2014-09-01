@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tiny Core DOCS! &mdash; Immunity DOCS 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+    <link rel="top" title="Immunity DOCS 1.0 documentation" href="index.html" />
+    <link rel="prev" title="The Ultra-Secure Cloud OS" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="index.html" title="The Ultra-Secure Cloud OS"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Immunity DOCS 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tiny-core-docs">
+<h1>Tiny Core DOCS!<a class="headerlink" href="#tiny-core-docs" title="Permalink to this headline">¶</a></h1>
+<p>This repository contains scripts, build definitions and patches to build a minimal linux distribution running from initramfs. It&#8217;s primary purpose is to teach the minimal requirements of a working linux system. If you just run our scripts you will end up with a small linux (between 5MB and 50MB) that allows you to login via SSH. Your phantasy and some scripts will expand this linux to a great deployment system or a platform for forensic analysis.</p>
+<p>Our TinyCrossLinux is initially based on &#8220;Cross Linux from Scratch&#8221; (embedded). It uses an initramfs instead of a classic root file system. The boot scripts use a layout that is inspired by Berkeley Unix (BSD). Boot the system and take a look at <tt class="code docutils literal"><span class="pre">/etc/rc.d</span></tt>. The scripts here will be executed in the order they appear (they will be called with the argument &#8220;start&#8221;). At shutdown the scripts will be called in reverse order (with argument stop).</p>
+<p>Scripts in this repository might be eventually moved to LessLinux&#8217; build process (I feel tempted not do to so to keep it simple). Currently only x86_64 is supported. ia32 and armhf (Raspberry Pi) will follow, but are of no major priority.</p>
+<div class="section" id="what-is-in-stage01">
+<h2>What is in stage01?<a class="headerlink" href="#what-is-in-stage01" title="Permalink to this headline">¶</a></h2>
+<p>Scripts to build the toolchain itself. You probably will not need to add/modify scripts here.</p>
+</div>
+<div class="section" id="what-is-in-stage02">
+<h2>What is in stage02?<a class="headerlink" href="#what-is-in-stage02" title="Permalink to this headline">¶</a></h2>
+<p>Scripts to build binaries for the target filesystem. Add as you want, but do not forget that you are cross compiling. Define <tt class="code docutils literal"><span class="pre">PKGNAME=...</span></tt> and <tt class="code docutils literal"><span class="pre">PKGVERSION=...</span></tt> since those are read by the script <tt class="code docutils literal"><span class="pre">build_stage0n.sh</span></tt>.</p>
+</div>
+<div class="section" id="what-is-in-stage02-extras">
+<h2>What is in stage02.extras?<a class="headerlink" href="#what-is-in-stage02-extras" title="Permalink to this headline">¶</a></h2>
+<p>These are scripts for tools and libraries that are not part of the base system. Softlink scripts of software you want to include to stage02. But be warned, you have to manually track dependencies, for example ntfs-3 needs fuse.</p>
+</div>
+<div class="section" id="building-everything">
+<h2>Building everything!<a class="headerlink" href="#building-everything" title="Permalink to this headline">¶</a></h2>
+<p>Script to assemble a bootable ISO image (isohybrid, might be dd&#8217;ed to an USB thumb drive). Currently BIOS only, UEFI will follow. Feel free to ad an overlay or similar sick things to this script - it is less than 40 lines anyway.</p>
+<p>So to build TinyCrossLinux run</p>
+<div class="highlight-bash"><div class="highlight"><pre>bash build_stage0n.sh <span class="c"># compiles everything</span>
+bash build_iso.sh     <span class="c"># builds two ISO images</span>
+                      <span class="c"># one for BIOS - one for UEFI</span>
+</pre></div>
+</div>
+<div class="section" id="faq">
+<h3>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="start-services">
+<h2>Start services<a class="headerlink" href="#start-services" title="Permalink to this headline">¶</a></h2>
+<p>Currently the following services provided by BusyBox or dropbearmulti are available. They are inactive by default, so use the bootparameters specified to enable them:</p>
+<ul class="simple">
+<li>SSHD <tt class="code docutils literal"><span class="pre">sshd=1</span></tt> - you might want to add a permanent key to <tt class="code docutils literal"><span class="pre">/etc/dropbear</span></tt></li>
+<li>HTTPD <tt class="code docutils literal"><span class="pre">httpd=1</span></tt> - searches for files in <tt class="code docutils literal"><span class="pre">/srv/www</span></tt></li>
+<li>TFTPD <tt class="code docutils literal"><span class="pre">tftpd=1</span></tt> - serves files from <tt class="code docutils literal"><span class="pre">/srv/tftp</span></tt></li>
+<li>UDHCPD <tt class="code docutils literal"><span class="pre">udhcpd=1</span></tt> - starts only in <tt class="code docutils literal"><span class="pre">/etc/udhcpd.conf</span></tt> is present</li>
+</ul>
+</div>
+<div class="section" id="login-with-password">
+<h2>Login with password?<a class="headerlink" href="#login-with-password" title="Permalink to this headline">¶</a></h2>
+<p>Run the command</p>
+<div class="highlight-bash"><div class="highlight"><pre>openssl passwd -1
+</pre></div>
+</div>
+<p>on an arbitary machine to create a password hash and replace the &#8216;!&#8217; in roots line in <tt class="code docutils literal"><span class="pre">patches/etc-shadow</span></tt> with the output.</p>
+</div>
+<div class="section" id="remove-login-without-password">
+<h2>Remove login without password?<a class="headerlink" href="#remove-login-without-password" title="Permalink to this headline">¶</a></h2>
+<p>Take a look at <tt class="code docutils literal"><span class="pre">patches/etc-inittab</span></tt>. Replace lines like</p>
+<div class="highlight-bash"><div class="highlight"><pre>ttyN::respawn:/bin/ash
+</pre></div>
+</div>
+<p>by</p>
+<div class="highlight-bash"><div class="highlight"><pre>ttyN::respawn:/sbin/getty -l /bin/login 38400 ttyN
+</pre></div>
+</div>
+</div>
+<div class="section" id="i-want-to-add-more-services">
+<h2>I want to add more services!<a class="headerlink" href="#i-want-to-add-more-services" title="Permalink to this headline">¶</a></h2>
+<p>The build script  <tt class="code docutils literal"><span class="pre">stage02/0001_basefiles.sh</span></tt> installs some of the startup scripts. Many of them are copied from the <tt class="code docutils literal"><span class="pre">patches</span> <span class="pre">directory</span></tt>. You might want to create <tt class="code docutils literal"><span class="pre">stage02/0002_mybasefiles.sh</span></tt>. Or you just expand the basefiles script.</p>
+</div>
+<div class="section" id="do-you-plan-to-add-features">
+<h2>Do you plan to add features?<a class="headerlink" href="#do-you-plan-to-add-features" title="Permalink to this headline">¶</a></h2>
+<p>This linux distribution will stay small and compact, thus I do not plan to add many features. I will add some build scripts to further expand the system for some rescue and forensic purposes:</p>
+<ul class="simple">
+<li>ddrescue</li>
+<li>ntfs-3g (ntfsclone etc.)</li>
+</ul>
+<p>Changes to the boot scripts that will be eventually made:</p>
+<ul class="simple">
+<li>more flexible network configuration (allow specification of static IP via boot command line)</li>
+<li>more flexible module loading (blacklisting and allow to specify additional modules via boot command line)</li>
+</ul>
+<p>I will also write a script to select certain modules and subdirectories from the kernels module tree to be able to reduce the size of the resulting ISO image without having to reconfigure the kernel.</p>
+</div>
+<div class="section" id="are-there-bugs">
+<h2>Are there bugs?<a class="headerlink" href="#are-there-bugs" title="Permalink to this headline">¶</a></h2>
+<p>Probably there are some. I already ran into those:</p>
+<ul class="simple">
+<li>You have to boot with a connected ethernet cable, otherwise udhcpc will try nearly forever to get a lease.</li>
+<li>Some kernel modules complain about unresolved symbols - I will add loading of some prerequisite modules in the next days.</li>
+<li>Some firmware is missing - I will provide you with a script to automatically install firmware for the linux-firmware collection for kernel modules installed, in the meantime add those blobs by hand.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tiny Core DOCS!</a><ul>
+<li><a class="reference internal" href="#what-is-in-stage01">What is in stage01?</a></li>
+<li><a class="reference internal" href="#what-is-in-stage02">What is in stage02?</a></li>
+<li><a class="reference internal" href="#what-is-in-stage02-extras">What is in stage02.extras?</a></li>
+<li><a class="reference internal" href="#building-everything">Building everything!</a><ul>
+<li><a class="reference internal" href="#faq">FAQ</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#start-services">Start services</a></li>
+<li><a class="reference internal" href="#login-with-password">Login with password?</a></li>
+<li><a class="reference internal" href="#remove-login-without-password">Remove login without password?</a></li>
+<li><a class="reference internal" href="#i-want-to-add-more-services">I want to add more services!</a></li>
+<li><a class="reference internal" href="#do-you-plan-to-add-features">Do you plan to add features?</a></li>
+<li><a class="reference internal" href="#are-there-bugs">Are there bugs?</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">The Ultra-Secure Cloud OS</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/information.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="index.html" title="The Ultra-Secure Cloud OS"
+             >previous</a> |</li>
+        <li><a href="index.html">Immunity DOCS 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, MindProtectionKit.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
