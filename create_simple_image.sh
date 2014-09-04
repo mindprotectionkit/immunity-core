@@ -47,6 +47,9 @@ if [ -n "$IMMUNETSCRIPT" ] ; then
 	install -m 0755 "$IMMUNETSCRIPT" "${IMMUBUILDDIR}/initramfs/etc/rc.d/0041-staticnet.sh"
 fi
 
+# Install the startup script for virtual machines
+install -m 0755 patches/etc-rc.d-0100-immuvm.sh "${IMMUBUILDDIR}/initramfs/etc/rc.d/0100-immuvm.sh"
+
 ( cd "${IMMUBUILDDIR}/initramfs" ; find . | \
 	cpio -o -H newc > ../immucore.cpio )
 
