@@ -8,6 +8,7 @@ fi
 if [ -z "$TINYCROSSDIR" ] ; then
 	echo '***> ERROR: Please export the environment variable TINYCROSSDIR'
 	echo '   > pointing to your TinyCrossLinux installation'
+	exit 1
 fi
 
 # Specify the environment variable IMMUBUILDDIR to define a build directory
@@ -39,7 +40,38 @@ mkdir -p "${IMMUBUILDDIR}/ssh-keys"
 ssh-keygen -t rsa -f "${IMMUBUILDDIR}/ssh-keys/id_ecdsa"
 install -m 0600 "${IMMUBUILDDIR}/ssh-keys/id_ecdsa.pub" "${IMMUBUILDDIR}/initramfs/root/.ssh/authorized_keys"
 install -m 0755 patches/etc-rc "${IMMUBUILDDIR}/initramfs/etc/rc"
-install -m 0644 patches/etc-inittab "${IMMUBUILDDIR}/initramfs/etc/inittab"
+# ask for inittab:
+echo 'Which inittab do you want to use?'
+echo ''
+echo '[1] inittab for debugging and testing - the local console is wide open!'
+echo ''
+cat patches/etc-inittab-debug
+echo ''
+echo '[2] inittab with local access - login is possible on three local and one'
+echo '    serial console - recommended for most purposes'
+echo ''
+cat patches/etc-inittab-local
+echo ''
+echo '[3] inittab without local access - login is just possible over the network'
+echo ''
+cat patches/etc-inittab-net
+echo -n 'Your choice? '
+read n
+case $n in
+	1)
+		install -m 0644 patches/etc-inittab-debug "${IMMUBUILDDIR}/initramfs/etc/inittab"
+	;;
+	2)
+		install -m 0644 patches/etc-inittab-local "${IMMUBUILDDIR}/initramfs/etc/inittab"
+	;;
+	3)
+		install -m 0644 patches/etc-inittab-net "${IMMUBUILDDIR}/initramfs/etc/inittab"
+	;;
+	*)
+		echo 'No valid choice!'
+		exit 1
+	;;
+esac
 
 if [ -n "$IMMUNETSCRIPT" ] ; then
 	echo '#!/bin/ash' > "${IMMUBUILDDIR}/initramfs/etc/rc.d/0040-udhcpc.sh"
