@@ -1,0 +1,8 @@
+::sysinit:/etc/rc
+tty1::respawn:/sbin/getty -l /bin/login 38400 tty1
+tty2::respawn:/sbin/getty -l /bin/login 38400 tty2
+tty3::respawn:/sbin/getty -l /bin/login 38400 tty3
+ttyS0::respawn:/sbin/getty -l /bin/login 38400 ttyS0
+::ctrlaltdel:/sbin/reboot
+::shutdown:/etc/rc.shutdown
+
