@@ -54,7 +54,7 @@ fi
 source "${TINYCROSSDIR}/stage0n_variables"
 workdir=`pwd `
 cd "${TINYCROSSDIR}"
-bash build_stage0n.sh
+bash build_stage0n.sh || die 'Building TinyCrossLinux failed - please check!' 
 cd "$workdir"
 
 rm -rf "${IMMUBUILDDIR}/initramfs"
