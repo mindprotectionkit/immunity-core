@@ -43,9 +43,13 @@ else
 			exit 1
 		;;
 	esac
-	( cd "$IMMUBUILDDIR" ;\
-	  git clone https://github.com/mschlenker/TinyCrossLinux || \
-	  die "Could not clone TinyCrossLinux" )
+	if [ -d "${IMMUBUILDDIR}/TinyCrossLinux" ] ; then
+		( cd "${IMMUBUILDDIR}/TinyCrossLinux" ; git pull )
+	else
+		( cd "$IMMUBUILDDIR" ; \
+		  git clone https://github.com/mschlenker/TinyCrossLinux || \
+		  die "Could not clone TinyCrossLinux" )
+	fi
 	if [ -z "$TINYBUILDDIR" ] ; then
 		export TINYBUILDDIR="${IMMUBUILDDIR}/TinyCrossBuild"
 	fi
