@@ -23,7 +23,7 @@ fi
 
 if [ -d "$IMMUBUILDDIR" ] ; then
 	echo '===> NOTE: '"${IMMUBUILDDIR}"' already exists. Make sure it is sane.'
-	echo '   > Then press RETURN (or Ctrl+C to cancel).'
+	echo -n '   > Then press RETURN (or Ctrl+C to cancel).'
 	read answer 
 fi
 mkdir -p "$IMMUBUILDDIR"
@@ -69,15 +69,38 @@ mkdir -p "${IMMUBUILDDIR}/initramfs/root/.ssh"
 # Now create keys for dropbear, host key first:
 
 for t in ecdsa ; do # ignore rsa dss
-	"${CLFS}/hosttools/bin/dropbearkey" -t ${t} -f "${IMMUBUILDDIR}/initramfs/etc/dropbear/dropbear_${t}_host_key"
+	"${TINYBUILDDIR}/hosttools/bin/dropbearkey" -t ${t} -f "${IMMUBUILDDIR}/initramfs/etc/dropbear/dropbear_${t}_host_key"
 done
+ls -lah "${IMMUBUILDDIR}"/initramfs/etc/dropbear/dropbear_*_host_key
 
 mkdir -p "${IMMUBUILDDIR}/ssh-keys"
-ssh-keygen -t rsa -f "${IMMUBUILDDIR}/ssh-keys/id_ecdsa"
-install -m 0600 "${IMMUBUILDDIR}/ssh-keys/id_ecdsa.pub" "${IMMUBUILDDIR}/initramfs/root/.ssh/authorized_keys"
+echo '===> NOTE: I am going to create an ECDSA key pair that can be used for login'
+echo '   > via SSH. The key will be stored at '"${IMMUBUILDDIR}/ssh-keys/id_ecdsa"
+echo '   > Press "n" if you have objectives due to security reasons. Do you want to'
+echo -n '   > create the key? [Y/n]? '
+read answer
+case $answer in
+	[nN]*)
+		echo '===> Skipping key'
+	;;
+	*)
+		ssh-keygen -t rsa -f "${IMMUBUILDDIR}/ssh-keys/id_ecdsa"
+		install -m 0600 "${IMMUBUILDDIR}/ssh-keys/id_ecdsa.pub" "${IMMUBUILDDIR}/initramfs/root/.ssh/authorized_keys"
+	;;
+esac
+echo '===> Note: You can add more SSH keys by specifying them here. Keep them'
+echo '   > separated by spaces. Just press return if you do not want to'
+echo '   > specify more keys.'
+read answer
+
+for key in $answer ; do
+	echo "Adding: $key" 
+	cat "$key" >> "${IMMUBUILDDIR}/initramfs/root/.ssh/authorized_keys"
+done
+
 install -m 0755 patches/etc-rc "${IMMUBUILDDIR}/initramfs/etc/rc"
 # ask for inittab:
-echo 'Which inittab do you want to use?'
+echo '===> NOTE: Which inittab do you want to use?'
 echo ''
 echo '[1] inittab for debugging and testing - the local console is wide open!'
 echo ''
@@ -109,6 +132,26 @@ case $n in
 	;;
 esac
 
+echo '===> NOTE: In the default configuration, no password for root is set.'
+echo '   > Login is only possible via SSH. For debugging and deployment you'
+echo '   > might want to set a password.'
+echo -n '   > Do you want to set a root password? [y/N] '
+read answer
+
+case $answer in
+	[yYjJ]*)
+		cat "${TINYCROSSDIR}/patches/etc-shadow" | \
+			sed 's/\!/'` openssl passwd -1 `'/g' \
+			> "${IMMUBUILDDIR}/initramfs/etc/shadow"
+		retval=$?
+		if [ "$retval" -lt 1 ] ; then
+			chmod 0640 "${IMMUBUILDDIR}/initramfs/etc/shadow"
+		else
+			rm "${IMMUBUILDDIR}/initramfs/etc/shadow"
+		fi
+	;;
+esac
+
 if [ -n "$IMMUNETSCRIPT" ] ; then
 	echo '#!/bin/ash' > "${IMMUBUILDDIR}/initramfs/etc/rc.d/0040-udhcpc.sh"
 	echo '/bin/true' >> "${IMMUBUILDDIR}/initramfs/etc/rc.d/0040-udhcpc.sh"
@@ -124,5 +167,9 @@ install -m 0755 patches/etc-rc.d-0100-immuvm.sh "${IMMUBUILDDIR}/initramfs/etc/r
 export TINYCPIOPAYLOAD="${IMMUBUILDDIR}/immucore.cpio"
 cd "${TINYCROSSDIR}"
 bash build_iso.sh
+mv "${TINYBUILDDIR}/tiny-cross-uefi.iso" "${IMMUBUILDDIR}/immunity-core-uefi.iso"
+mv "${TINYBUILDDIR}/tiny-cross-bios.iso" "${IMMUBUILDDIR}/immunity-core-bios.iso"
+echo '===> DONE: Now check out the two ISO images:'
+echo "     ${IMMUBUILDDIR}/immunity-core-uefi.iso"
+echo "     ${IMMUBUILDDIR}/immunity-core-bios.iso"
 cd "$workdir"
-
