@@ -5,19 +5,51 @@ if [ "$me" -gt 0 ] ; then
 	echo 'Please run this script with root privileges!'
 fi
 
-if [ -z "$TINYCROSSDIR" ] ; then
-	echo '***> ERROR: Please export the environment variable TINYCROSSDIR'
-	echo '   > pointing to your TinyCrossLinux installation'
-	exit 1
-fi
-
 # Specify the environment variable IMMUBUILDDIR to define a build directory
 # other than /mnt/archiv/ImmuCoreBuild
 
 if [ -z "$IMMUBUILDDIR" ] ; then
-	IMMUBUILDDIR=/mnt/archiv/ImmuCoreBuild
+	IMMUBUILDDIR=/usr/local/ImmuCoreBuild
+	echo '===> NOTE: IMMUBUILDDIR was not specified as environment variable.'
+	echo '   > We are gonna create and use '"${IMMUBUILDDIR}"
+	echo -n '   > Is this OK? [Y/n] '
+	read answer
+	case $answer in 
+		[nN]*)
+			exit 1
+		;;
+	esac
 fi
-echo "$IMMUBUILDDIR"
+
+if [ -d "$IMMUBUILDDIR" ] ; then
+	echo '===> NOTE: '"${IMMUBUILDDIR}"' already exists. Make sure it is sane.'
+	echo '   > Then press RETURN (or Ctrl+C to cancel).'
+	read answer 
+fi
+mkdir -p "$IMMUBUILDDIR"
+
+if [ -n "$TINYCROSSDIR" ] ; then
+	echo '===> NOTE: TINYCROSSDIR was specified as environment variable.'
+	echo '   > I hope this is recent enough!'
+else
+	TINYCROSSDIR="${IMMUBUILDDIR}/TinyCrossLinux"
+	echo '===> NOTE: TINYCROSSDIR was not specified as environment variable.'
+	echo '   > We are gonna create, populate and use '"${TINYCROSSDIR}."
+	echo '   > If cloning fails, you might have to install and configure git.'
+	echo -n '   > Is this OK? [Y/n] '
+	read answer
+	case $answer in 
+		[nN]*)
+			exit 1
+		;;
+	esac
+	( cd "$IMMUBUILDDIR" ;\
+	  git clone https://github.com/mschlenker/TinyCrossLinux || \
+	  die "Could not clone TinyCrossLinux" )
+	if [ -z "$TINYBUILDDIR" ] ; then
+		export TINYBUILDDIR="${IMMUBUILDDIR}/TinyCrossBuild"
+	fi
+fi
 
 source "${TINYCROSSDIR}/stage0n_variables"
 workdir=`pwd `
