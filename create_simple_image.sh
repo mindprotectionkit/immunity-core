@@ -21,7 +21,8 @@
 # 		To the directory where you checked out TinyCrossLinux
 #		if not given, ${IMMUBUILDDIR}/TinyCrossLinux will be used
 # TINYBUILDDIR	Directory where your TinyCrossLinux is being built
-#		if not given, ${IMMUBUILDDIR}/TinyCrossBuild will be used
+#		if not given, TinyCrossLinux' default will be used, so better 
+#		set to ${IMMUBUILDDIR}/TinyCrossBuild! 
 # NOECDSAKEY	Set to 1 if you do not want to create a key for root login
 # MORESSHKEYS	List of SSH keys to add to root's authorized_keys
 #		Set to " " (a single space) to skip the question - bug...
