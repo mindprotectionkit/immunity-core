@@ -1,5 +1,37 @@
 #!/bin/bash
 
+# (c) 2014 Mattias Schlenker
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Environment variables to automate this script (in order of appearence:
+# 
+# IMMUBUILDDIR	Directory where you want to build immunity core
+# TINYCROSSDIR	Directory where your TinyCrossLinux resides - should point
+# 		To the directory where you checked out TinyCrossLinux
+#		if not given, ${IMMUBUILDDIR}/TinyCrossLinux will be used
+# TINYBUILDDIR	Directory where your TinyCrossLinux is being built
+#		if not given, ${IMMUBUILDDIR}/TinyCrossBuild will be used
+# NOECDSAKEY	Set to 1 if you do not want to create a key for root login
+# MORESSHKEYS	List of SSH keys to add to root's authorized_keys
+#		Set to " " (a single space) to skip the question - bug...
+# INITTAB	Which inittab to use?
+#			1: patches/etc-inittab-debug
+#			2: patches/etc-inittab-local
+#			3: patches/etc-inittab-net
+# ROOTLOGIN	Set to "no" or 0 if ! sould stay in /etc/shadow
+# IMMUNETSCRIPT	Specify a script to install as /etc/rc.d/0041-staticnet.sh
+
 me=` id -u `
 if [ "$me" -gt 0 ] ; then
 	echo 'Please run this script with root privileges!'
@@ -74,49 +106,57 @@ done
 ls -lah "${IMMUBUILDDIR}"/initramfs/etc/dropbear/dropbear_*_host_key
 
 mkdir -p "${IMMUBUILDDIR}/ssh-keys"
-echo '===> NOTE: I am going to create an ECDSA key pair that can be used for login'
-echo '   > via SSH. The key will be stored at '"${IMMUBUILDDIR}/ssh-keys/id_ecdsa"
-echo '   > Press "n" if you have objectives due to security reasons. Do you want to'
-echo -n '   > create the key? [Y/n]? '
-read answer
-case $answer in
-	[nN]*)
-		echo '===> Skipping key'
-	;;
-	*)
-		ssh-keygen -t rsa -f "${IMMUBUILDDIR}/ssh-keys/id_ecdsa"
-		install -m 0600 "${IMMUBUILDDIR}/ssh-keys/id_ecdsa.pub" "${IMMUBUILDDIR}/initramfs/root/.ssh/authorized_keys"
-	;;
-esac
-echo '===> Note: You can add more SSH keys by specifying them here. Keep them'
-echo '   > separated by spaces. Just press return if you do not want to'
-echo '   > specify more keys.'
-read answer
-
-for key in $answer ; do
-	echo "Adding: $key" 
-	cat "$key" >> "${IMMUBUILDDIR}/initramfs/root/.ssh/authorized_keys"
-done
+if [ "$NOECDSAKEY" -gt 0 ] ; then
+	echo '---> Skipping key generation'
+else
+	echo '===> NOTE: I am going to create an ECDSA key pair that can be used for login'
+	echo '   > via SSH. The key will be stored at '"${IMMUBUILDDIR}/ssh-keys/id_ecdsa"
+	echo '   > Press "n" if you have objectives due to security reasons. Do you want to'
+	echo -n '   > create the key? [Y/n]? '
+	read answer
+	case $answer in
+		[nN]*)
+			echo '===> Skipping key'
+		;;
+		*)
+			ssh-keygen -t rsa -f "${IMMUBUILDDIR}/ssh-keys/id_ecdsa"
+			install -m 0600 "${IMMUBUILDDIR}/ssh-keys/id_ecdsa.pub" "${IMMUBUILDDIR}/initramfs/root/.ssh/authorized_keys"
+		;;
+	esac
+fi
+if [ -z "$MORESSHKEYS" ] ; then
+	echo '===> Note: You can add more SSH keys by specifying them here. Keep them'
+	echo '   > separated by spaces. Just press return if you do not want to'
+	echo '   > specify more keys.'
+	read MORESSHKEYS
+	for key in $answer ; do
+		echo "Adding: $key" 
+		cat "$key" >> "${IMMUBUILDDIR}/initramfs/root/.ssh/authorized_keys"
+	done
+fi
 
 install -m 0755 patches/etc-rc "${IMMUBUILDDIR}/initramfs/etc/rc"
-# ask for inittab:
-echo '===> NOTE: Which inittab do you want to use?'
-echo ''
-echo '[1] inittab for debugging and testing - the local console is wide open!'
-echo ''
-cat patches/etc-inittab-debug
-echo ''
-echo '[2] inittab with local access - login is possible on three local and one'
-echo '    serial console - recommended for most purposes'
-echo ''
-cat patches/etc-inittab-local
-echo ''
-echo '[3] inittab without local access - login is just possible over the network'
-echo ''
-cat patches/etc-inittab-net
-echo -n 'Your choice? '
-read n
-case $n in
+
+if [ -z "$INITTAB" ] ; then
+	# ask for inittab:
+	echo '===> NOTE: Which inittab do you want to use?'
+	echo ''
+	echo '[1] inittab for debugging and testing - the local console is wide open!'
+	echo ''
+	cat patches/etc-inittab-debug
+	echo ''
+	echo '[2] inittab with local access - login is possible on three local and one'
+	echo '    serial console - recommended for most purposes'
+	echo ''
+	cat patches/etc-inittab-local
+	echo ''
+	echo '[3] inittab without local access - login is just possible over the network'
+	echo ''
+	cat patches/etc-inittab-net
+	echo -n 'Your choice? '
+	read INITTAB
+fi
+case $INITTAB in
 	1)
 		install -m 0644 patches/etc-inittab-debug "${IMMUBUILDDIR}/initramfs/etc/inittab"
 	;;
@@ -132,14 +172,15 @@ case $n in
 	;;
 esac
 
-echo '===> NOTE: In the default configuration, no password for root is set.'
-echo '   > Login is only possible via SSH. For debugging and deployment you'
-echo '   > might want to set a password.'
-echo -n '   > Do you want to set a root password? [y/N] '
-read answer
-
-case $answer in
-	[yYjJ]*)
+if [ -z "$ROOTLOGIN" ] ; then
+	echo '===> NOTE: In the default configuration, no password for root is set.'
+	echo '   > Login is only possible via SSH. For debugging and deployment you'
+	echo '   > might want to set a password.'
+	echo -n '   > Do you want to set a root password? [y/N] '
+	read ROOTLOGIN
+fi
+case $ROOTLOGIN in
+	[yYjJ1]*)
 		cat "${TINYCROSSDIR}/patches/etc-shadow" | \
 			sed 's/\!/'` openssl passwd -1 `'/g' \
 			> "${IMMUBUILDDIR}/initramfs/etc/shadow"
