@@ -33,6 +33,11 @@
 # ROOTLOGIN	Set to "no" or 0 if ! sould stay in /etc/shadow
 # IMMUNETSCRIPT	Specify a script to install as /etc/rc.d/0041-staticnet.sh
 
+function die {
+	echo "$1"
+	exit 1
+}
+
 me=` id -u `
 if [ "$me" -gt 0 ] ; then
 	echo 'Please run this script with root privileges!'
